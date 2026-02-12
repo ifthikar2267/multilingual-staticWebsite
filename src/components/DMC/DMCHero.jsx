@@ -3,7 +3,7 @@ import Box from "@mui/material/Box";
 import Container from "@mui/material/Container";
 import Typography from "@mui/material/Typography";
 
-export default function HeroSection({ hero, dir = "ltr" }) {
+export default function DMCHero({ hero, dir = "ltr" }) {
   const image = hero?.image;
   const gradient =
     dir === "rtl"
@@ -17,13 +17,13 @@ export default function HeroSection({ hero, dir = "ltr" }) {
         position: "relative",
         overflow: "hidden",
         minHeight: { xs: 260, sm: 320, md: 520 },
-        width: "100%"
+        width: "100%",
       }}
     >
       {image?.url ? (
         <Image
           src={image.url}
-          alt={image.alt || hero?.title || "About Us"}
+          alt={image.alt || hero?.title || "DMC"}
           fill
           priority
           sizes="100vw"
@@ -33,13 +33,7 @@ export default function HeroSection({ hero, dir = "ltr" }) {
         <Box sx={{ position: "absolute", inset: 0, bgcolor: "grey.200" }} />
       )}
 
-      <Box
-        sx={{
-          position: "absolute",
-          inset: 0,
-          background: gradient,
-        }}
-      />
+      <Box sx={{ position: "absolute", inset: 0, background: gradient }} />
 
       <Box
         sx={{
@@ -56,13 +50,13 @@ export default function HeroSection({ hero, dir = "ltr" }) {
               variant="h3"
               sx={{
                 color: "common.white",
-                fontWeight: 250,
-                lineHeight: 1.1,
-                fontSize: { xs: 32, sm: 40, md: 52 },
+                fontWeight: 400,
+                lineHeight: 1,
+                fontSize: { xs: 32, sm: 40, md: 50 },
                 textAlign: "start",
               }}
             >
-              {hero?.title || "About Us"}
+              {hero?.title || "Destination Management Company"}
             </Typography>
 
             {hero?.subTitle ? (
@@ -83,4 +77,3 @@ export default function HeroSection({ hero, dir = "ltr" }) {
     </Box>
   );
 }
-

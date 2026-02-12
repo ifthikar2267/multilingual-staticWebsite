@@ -16,7 +16,7 @@ export default function AboutUsContent({ data, locale }) {
   const dir = locale === "ar" ? "rtl" : "ltr";
 
   return (
-    <Stack spacing={{ xs: 4, md: 7 }}>
+     <Stack spacing={{ xs: 4, md: 7 }}>
       <HeroSection hero={data.hero} dir={dir} />
 
       {data.featuredCards?.length ? (
@@ -24,7 +24,7 @@ export default function AboutUsContent({ data, locale }) {
       ) : null}
 
       <Box component="section">
-        <Stack spacing={{ xs: 4, md: 6 }}>
+        <Stack>
           {data.sections?.map((section) => (
             <SectionRenderer key={section.id} section={section} />
           ))}

@@ -10,32 +10,30 @@ export default function LogoSection({ section }) {
   const logos = Array.isArray(section?.logos) ? section.logos : [];
 
   return (
-    <Box component="section">
+    <Box component="section" sx={{backgroundColor: "rgba(97, 75, 121, 0.2)", p: { xs: 2, md: 3 }}}>
       {section?.title ? (
-        <Typography variant="h4" sx={{ fontWeight: 900, mb: 1.5 }}>
+        <Typography variant="h4" sx={{ fontWeight: 600, mb: 1.5 , color: "#ca4608"}}>
           {section.title}
         </Typography>
       ) : null}
 
       {section?.description ? (
         <Box sx={{ mb: 3 }}>
-          <MarkdownText text={section.description} />
+          <MarkdownText text={section.description}/>
         </Box>
       ) : (
-        <Box sx={{ mb: 1 }} />
+        <Box/>
       )}
 
-      <Paper
-        variant="outlined"
-        sx={{ borderRadius: { xs: 3, md: 4 }, p: { xs: 2, md: 3 } }}
-      >
+      <Paper>
+
         <Grid container spacing={{ xs: 2, md: 2.5 }}>
           {logos.map((logo, idx) => {
             const img = logo?.image;
             if (!img?.url) return null;
 
             return (
-              <Grid key={logo?.id || idx} item xs={6} sm={4} md={3}>
+              <Grid key={logo?.id || idx} item xs={6} sm={4} md={3} sx={{backgroundColor: "rgba(97, 75, 121, 0.2)"}}>
                 <Box
                   sx={{
                     position: "relative",
@@ -43,7 +41,6 @@ export default function LogoSection({ section }) {
                     display: "flex",
                     alignItems: "center",
                     justifyContent: "center",
-                    bgcolor: "common.white",
                   }}
                 >
                   <Image

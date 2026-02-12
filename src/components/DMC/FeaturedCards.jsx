@@ -3,7 +3,6 @@ import Box from "@mui/material/Box";
 import Grid from "@mui/material/Grid";
 import Paper from "@mui/material/Paper";
 import Typography from "@mui/material/Typography";
-
 import MarkdownText from "@/components/about-us/MarkdownText";
 
 export default function FeaturedCards({ cards }) {
@@ -62,12 +61,12 @@ export default function FeaturedCards({ cards }) {
                       <Box sx={{ p: { xs: 3, md: 4 } }}>
                         {card?.title ? (
                           <Typography
-                            variant="h5"
+                            variant="h4"
                             sx={{
                               letterSpacing: 0.2,
                               fontWeight: 600,
                               textAlign: "start",
-                              color:"#ca4608"
+                              color: "#ca4608"
                             }}
                           >
                             {card.title}
@@ -78,7 +77,7 @@ export default function FeaturedCards({ cards }) {
                           <MarkdownText
                             text={card?.description}
                             align="start"
-                            headingWeight={200}
+                            headingWeight={600}
                             bodyWeight={400}
                           />
                         </Box>
@@ -93,4 +92,3 @@ export default function FeaturedCards({ cards }) {
     </Box>
   );
 }
-

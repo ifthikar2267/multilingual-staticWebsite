@@ -10,9 +10,9 @@ export default function CardGrid({ section }) {
   const cards = Array.isArray(section?.cards) ? section.cards : [];
 
   return (
-    <Box component="section">
+    <Box component="section" sx={{backgroundColor: "#614B791A", p: { xs: 2, md: 3 }}}>
       {section?.title ? (
-        <Typography variant="h4" sx={{ fontWeight: 900, mb: 1.5 }}>
+        <Typography variant="h4" sx={{ fontWeight: 600, mb: 1.5, color: "#ca4608" }}>
           {section.title}
         </Typography>
       ) : null}

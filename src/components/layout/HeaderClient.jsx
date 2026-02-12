@@ -1,13 +1,21 @@
+"use client";
+
+import { usePathname } from "next/navigation";
 import AppBar from "@mui/material/AppBar";
 import Box from "@mui/material/Box";
+import Button from "@mui/material/Button";
 import Toolbar from "@mui/material/Toolbar";
 import Typography from "@mui/material/Typography";
-import Button from "@mui/material/Button";
 import ServerLinkButton from "@/components/navigation/ServerLinkButton";
 
-export default function Header({ locale }) {
+export default function HeaderClient({ locale }) {
+  const pathname = usePathname();
   const otherLocale = locale === "ar" ? "en" : "ar";
-  const switchHref = `/${otherLocale}/about-us`;
+
+  // Swap locale in current path
+  const switchHref = pathname
+    ? pathname.replace(`/${locale}`, `/${otherLocale}`)
+    : `/${otherLocale}/about-us`;
 
   return (
     <AppBar position="sticky" elevation={0} color="transparent">
@@ -39,7 +47,6 @@ export default function Header({ locale }) {
             DMC
           </ServerLinkButton>
 
-          {/* Full document navigation for locale switch (ensures SSR HTML in Document response). */}
           <Button component="a" href={switchHref} variant="outlined">
             {otherLocale === "ar" ? "العربية" : "English"}
           </Button>
@@ -48,4 +55,3 @@ export default function Header({ locale }) {
     </AppBar>
   );
 }
-
