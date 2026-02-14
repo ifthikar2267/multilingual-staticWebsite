@@ -31,7 +31,7 @@ export default function FeaturedCards({ cards }) {
   if (!Array.isArray(cards) || cards.length === 0) return null;
 
   return (
-    <Box component="section">
+    <Box component="section" sx={{mt: {xs: 1, md: -25}}}>
       <Grid container spacing={{ xs: 3, md: 4 }}>
         {cards
           .filter((c) => c?.enabled !== false)
@@ -41,27 +41,41 @@ export default function FeaturedCards({ cards }) {
 
             return (
               <Grid key={card.id || idx} item xs={12}>
-                <Paper
-                  variant="outlined"
+                <Box
                   sx={{
+                    bgcolor: "white",
+                    borderRadius: 1,
+                    p: { xs: 2, md: 3 },
+                    position: "relative",
                     overflow: "hidden",
-                    borderRadius: { xs: 2, md: 2 },
+                    height: "100%",
                   }}
                 >
-                  <Grid container>
+                  <Grid container spacing={4} alignItems="stretch">
                     {/* Image */}
                     <Grid
                       item
                       xs={12}
                       md={6}
-                      order={{ xs: 0, md: imageFirst ? 0 : 1 }}
+                      order={{ xs: 0, md: imageFirst ? 1 : 0 }}
                     >
                       <Box
                         sx={{
+                          width: "100%",
+                          height: { xs: 260, md: "100%" },
+                          minHeight: { md: 420 },
                           position: "relative",
-                          height: { xs: 240, sm: 320, md: "100%" },
-                          minHeight: { md: 360 },
-                          bgcolor: "white",
+                          borderRadius: "12px",
+                          aspectRatio: "4 / 3",
+                          overflow: "hidden",
+
+                          "& img": {
+                            transition: "transform 0.5s ease",
+                          },
+
+                          "&:hover img": {
+                            transform: "scale(1.06)",
+                          },
                         }}
                       >
                         {card?.image?.url && (
@@ -74,7 +88,7 @@ export default function FeaturedCards({ cards }) {
                             }
                             fill
                             sizes="(max-width: 900px) 100vw, 50vw"
-                            style={{ objectFit: "contain" }}
+                            style={{ objectFit: "cover", borderRadius: "12px" }}
                           />
                         )}
                       </Box>
@@ -85,9 +99,16 @@ export default function FeaturedCards({ cards }) {
                       item
                       xs={12}
                       md={6}
-                      order={{ xs: 1, md: imageFirst ? 1 : 0 }}
+                      order={{ xs: 1, md: imageFirst ? 0 : 1 }}
                     >
-                      <Box sx={{ p: { xs: 3, md: 4 } }}>
+                      <Box sx={{
+                          height: "100%",
+                          display: "flex",
+                          flexDirection: "column",
+                          justifyContent: "center",
+                          bgcolor: "white",
+                          position: "relative",
+                        }}>
                         {card?.title && (
                           <Typography
                             variant="h4"
@@ -104,12 +125,12 @@ export default function FeaturedCards({ cards }) {
                           </Typography>
                         )}
 
-                        <Box sx={{ mt: 1.5 }}>
+                        <Box>
                           {paragraphs.map((para, i) => (
                             <Typography
                               key={i}
                               sx={{
-                                fontFamily: "Gilroy",
+                                fontFamily: "Gilroy-Regular",
                                 fontSize: "17px",
                                 lineHeight: "24px",
                                 color: "#333",
@@ -124,7 +145,7 @@ export default function FeaturedCards({ cards }) {
                       </Box>
                     </Grid>
                   </Grid>
-                </Paper>
+                </Box>
               </Grid>
             );
           })}

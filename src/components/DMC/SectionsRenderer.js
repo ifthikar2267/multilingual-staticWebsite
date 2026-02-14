@@ -9,13 +9,28 @@ export default function SectionsRenderer({ sections }) {
   if (!Array.isArray(sections) || sections.length === 0) return null;
 
   return (
-    <Box component="section" sx={{backgroundColor: "rgba(97, 75, 121, 0.1)", p: { xs: 3, md: 4 }, borderRadius: 2 }}>
+    <Box
+      component="section"
+      sx={{
+        backgroundColor: "rgba(97, 75, 121, 0.1)",
+        p: { xs: 2, md: 3 },
+        mb: 5,
+        borderRadius: 1,
+      }}
+    >
       {sections.map((section) => (
         <Box key={section.id} sx={{ mb: { xs: 6, md: 8 } }}>
           {section?.title ? (
             <Typography
               variant="h4"
-              sx={{ fontWeight: 600, mb: 2, textAlign: "start", color: "#ca4608" }}
+              sx={{
+                fontWeight: 700,
+                fontSize: { xs: 24, md: 34 },
+                pt: 4,
+                pb: 4,
+                textAlign: "start",
+                color: "#ca4608",
+              }}
             >
               {section.title}
             </Typography>
@@ -36,19 +51,30 @@ export default function SectionsRenderer({ sections }) {
             <Box
               sx={{
                 position: "relative",
-                height: { xs: 240, sm: 320, md: 600 },
+                height: { xs: 300, sm: 380, md: 600 }, // increased height
                 mb: 3,
-                borderRadius: 2,
+                borderRadius: 1,
                 overflow: "hidden",
               }}
             >
-              <Image
-                src={section.image.url}
-                alt={section.image.alt || section.title || "Section"}
-                fill
-                sizes="(max-width: 900px) 100vw, 900px"
-                style={{ objectFit: "cover" }}
-              />
+              <Box
+                sx={{
+                  position: "absolute",
+                  inset: 0,
+                  transition: "transform 0.5s ease",
+                  "&:hover": {
+                    transform: "scale(1.06)",
+                  },
+                }}
+              >
+                <Image
+                  src={section.image.url}
+                  alt={section.image.alt || section.title || "Section"}
+                  fill
+                  sizes="(max-width: 900px) 100vw, 900px"
+                  style={{ objectFit: "cover" }}
+                />
+              </Box>
             </Box>
           ) : null}
 
@@ -57,7 +83,7 @@ export default function SectionsRenderer({ sections }) {
               {section.cards
                 .filter((c) => c?.enabled !== false)
                 .map((card, idx) => {
-                  const mdCols = card?.fullWidth ? 12 : 4;
+                  const mdCols = card?.fullWidth ? 12 : 6;
                   const hasImage = !!card?.image?.url;
 
                   return (
@@ -66,7 +92,6 @@ export default function SectionsRenderer({ sections }) {
                         variant="outlined"
                         sx={{
                           overflow: "hidden",
-                          borderRadius: 2,
                           height: "100%",
                           display: "flex",
                           flexDirection: "column",
@@ -76,17 +101,29 @@ export default function SectionsRenderer({ sections }) {
                           <Box
                             sx={{
                               position: "relative",
-                              height: { xs: 180, md: 200 },
+                              height: { xs: 220, md: 260 }, // increased height
                               bgcolor: "grey.100",
+                              overflow: "hidden",
                             }}
                           >
-                            <Image
-                              src={card.image.url}
-                              alt={card.image.alt || card.title || "Card"}
-                              fill
-                              sizes="(max-width: 600px) 100vw, (max-width: 900px) 50vw, 33vw"
-                              style={{ objectFit: "cover" }}
-                            />
+                            <Box
+                              sx={{
+                                position: "absolute",
+                                inset: 0,
+                                transition: "transform 0.5s ease",
+                                "&:hover": {
+                                  transform: "scale(1.06)",
+                                },
+                              }}
+                            >
+                              <Image
+                                src={card.image.url}
+                                alt={card.image.alt || card.title || "Card"}
+                                fill
+                                sizes="(max-width: 600px) 100vw, (max-width: 900px) 50vw, 33vw"
+                                style={{ objectFit: "cover" }}
+                              />
+                            </Box>
                           </Box>
                         ) : null}
 
@@ -102,10 +139,11 @@ export default function SectionsRenderer({ sections }) {
                             <Typography
                               variant="h6"
                               sx={{
-                                fontWeight: 700,
+                                fontWeight: 600,
                                 mb: 1.5,
                                 textAlign: "start",
-                                fontSize: { xs: "1.1rem", md: "1.25rem" },
+                                fontSize: { xs: "1.1rem", md: "18px" },
+                                
                               }}
                             >
                               {card.title}
@@ -113,12 +151,13 @@ export default function SectionsRenderer({ sections }) {
                           ) : null}
 
                           {card?.description ? (
-                            <Typography
-                              variant="body2"
-                              color="text.secondary"
+                            <Typography                    
                               sx={{
                                 textAlign: "start",
                                 lineHeight: 1.6,
+                                fontSize: { xs: "14px", md: "16px" },
+                                fontWeight: 400,
+                                color: "#2E1A47",
                               }}
                             >
                               {card.description}

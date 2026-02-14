@@ -33,8 +33,6 @@ export default function DMCHero({ hero, dir = "ltr" }) {
         <Box sx={{ position: "absolute", inset: 0, bgcolor: "grey.200" }} />
       )}
 
-      <Box sx={{ position: "absolute", inset: 0, background: gradient }} />
-
       <Box
         sx={{
           position: "absolute",
@@ -50,9 +48,9 @@ export default function DMCHero({ hero, dir = "ltr" }) {
               variant="h3"
               sx={{
                 color: "common.white",
-                fontWeight: 400,
-                lineHeight: 1,
-                fontSize: { xs: 32, sm: 40, md: 50 },
+                fontWeight: 250,
+                lineHeight: 9.5,
+                fontSize: { xs: 32, sm: 40, md: 52 },
                 textAlign: "start",
               }}
             >

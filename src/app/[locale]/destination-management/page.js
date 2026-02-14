@@ -78,7 +78,7 @@ export default async function DMCPage({ params }) {
   return (
     <Stack spacing={{ xs: 4, md: 7 }}>
       <DMCHero hero={data.hero} dir={dir} />
-      <Box sx={{ width: '1200px',  margin: '0 auto !important', }}>
+      <Box sx={{maxWidth: "lg", mx: "auto", px: 2 , margin: '0 auto !important' }}>
         {data.featuredCards?.length ? (
         <FeaturedCards cards={data.featuredCards} />
       ) : null}
