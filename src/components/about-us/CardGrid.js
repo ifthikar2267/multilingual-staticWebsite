@@ -10,9 +10,22 @@ export default function CardGrid({ section }) {
   const cards = Array.isArray(section?.cards) ? section.cards : [];
 
   return (
-    <Box component="section" sx={{backgroundColor: "#614B791A", p: { xs: 2, md: 3 }}}>
+    <Box
+      component="section"
+      sx={{ backgroundColor: "#614B791A", p: { xs: 2, md: 3 } }}
+    >
       {section?.title ? (
-        <Typography variant="h4" sx={{ fontWeight: 600, mb: 1.5, color: "#ca4608" }}>
+        <Typography
+          variant="h4"
+          sx={{
+            fontFamily: "Gilroy-Bold",
+            fontSize: "34px",
+            fontWeight: 700,
+            lineHeight: "52px",
+            margin: "0 0 32px",
+            color: "#E04E39",
+          }}
+        >
           {section.title}
         </Typography>
       ) : null}
@@ -48,6 +61,14 @@ export default function CardGrid({ section }) {
                             position: "relative",
                             height: { xs: 220, sm: 260, md: 400 },
                             bgcolor: "grey.100",
+
+                            "& img": {
+                              transition: "transform 0.5s ease",
+                            },
+
+                            "&:hover img": {
+                              transform: "scale(1.06)",
+                            },
                           }}
                         >
                           <Image
@@ -81,12 +102,16 @@ export default function CardGrid({ section }) {
                           </Typography>
                         ) : null}
 
-                        <MarkdownText
-                          text={card?.description}
-                          align="center"
-                          headingWeight={600}
-                          bodyWeight={400}
-                        />
+                        <Typography
+                          sx={{
+                            fontFamily: "Gilroy-Semibold",
+                            fontSize: "17px",
+                            lineHeight: "24px",
+                            color: "#333",
+                          }}
+                        >
+                          {card?.description}
+                        </Typography>
                       </Box>
                     </Grid>
                   </Grid>
@@ -98,4 +123,3 @@ export default function CardGrid({ section }) {
     </Box>
   );
 }
-

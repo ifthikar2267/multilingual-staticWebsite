@@ -1,9 +1,16 @@
 import AppBar from "@mui/material/AppBar";
 import Box from "@mui/material/Box";
 import Toolbar from "@mui/material/Toolbar";
-import Typography from "@mui/material/Typography";
 import Button from "@mui/material/Button";
+import Image from "next/image";
 import ServerLinkButton from "@/components/navigation/ServerLinkButton";
+
+const HEADER_LOGO_URL = {
+  brandLogo: {
+    url: "https://alm-biz-assets-dev.almosafer.com/discoversaudi_26961e0964.svg",
+    alt: "Discover Saudi Logo",
+  },
+};
 
 export default function Header({ locale }) {
   const otherLocale = locale === "ar" ? "en" : "ar";
@@ -16,30 +23,38 @@ export default function Header({ locale }) {
           borderBottom: "1px solid",
           borderColor: "divider",
           bgcolor: "background.paper",
+          alignItems: "center",
+          justifyContent: "space-between",
+          py: { xs: 1, md: 2 },
         }}
       >
-        <Typography
-          variant="h6"
-          sx={{ fontWeight: 700, letterSpacing: 0.2, flex: 1 }}
-        >
-          <a
-            href={`/${locale}/about-us`}
-            style={{ color: "inherit", textDecoration: "none" }}
-          >
-            Discover Saudi
+        {/* LOGO */}
+        <Box sx={{ flex: 1 }}>
+          <a href={`/${locale}/about-us`}>
+            <Image
+              src={HEADER_LOGO_URL.brandLogo.url}
+              alt={HEADER_LOGO_URL.brandLogo.alt}
+              width={150}
+              height={40}
+              priority
+              style={{ objectFit: "contain" }}
+            />
           </a>
-        </Typography>
+        </Box>
 
+        {/* NAVIGATION */}
         <Box sx={{ display: "flex", gap: 1 }}>
           <ServerLinkButton href={`/${locale}/about-us`} color="inherit">
             About Us
           </ServerLinkButton>
 
-          <ServerLinkButton href={`/${locale}/destination-management`} color="inherit">
+          <ServerLinkButton
+            href={`/${locale}/destination-management`}
+            color="inherit"
+          >
             DMC
           </ServerLinkButton>
 
-          {/* Full document navigation for locale switch (ensures SSR HTML in Document response). */}
           <Button component="a" href={switchHref} variant="outlined">
             {otherLocale === "ar" ? "العربية" : "English"}
           </Button>
@@ -48,4 +63,3 @@ export default function Header({ locale }) {
     </AppBar>
   );
 }
-

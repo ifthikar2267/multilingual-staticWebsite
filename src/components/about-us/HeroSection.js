@@ -27,19 +27,11 @@ export default function HeroSection({ hero, dir = "ltr" }) {
           fill
           priority
           sizes="100vw"
-          style={{ objectFit: "cover", objectPosition: "center" }}
+          style={{ objectFit: "cover", objectPosition: "center"}}
         />
       ) : (
         <Box sx={{ position: "absolute", inset: 0, bgcolor: "grey.200" }} />
       )}
-
-      <Box
-        sx={{
-          position: "absolute",
-          inset: 0,
-          background: gradient,
-        }}
-      />
 
       <Box
         sx={{
@@ -57,7 +49,7 @@ export default function HeroSection({ hero, dir = "ltr" }) {
               sx={{
                 color: "common.white",
                 fontWeight: 250,
-                lineHeight: 1.1,
+                lineHeight: 9.5,
                 fontSize: { xs: 32, sm: 40, md: 52 },
                 textAlign: "start",
               }}
@@ -83,4 +75,3 @@ export default function HeroSection({ hero, dir = "ltr" }) {
     </Box>
   );
 }
-

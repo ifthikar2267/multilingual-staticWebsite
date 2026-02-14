@@ -7,18 +7,53 @@ import Grid from "@mui/material/Grid";
 import IconButton from "@mui/material/IconButton";
 import Stack from "@mui/material/Stack";
 import Typography from "@mui/material/Typography";
+import InstagramIcon from "@mui/icons-material/Instagram";
+import XIcon from "@mui/icons-material/X";
 
 import { getStrapiImage } from "@/utils/strapi";
+import { getDmcRaw } from "@/services/dmcService";
 
-const ABOUT_US_URL =
-  `${process.env.ABOUT_US_URL}/api/about-us?locale={locale}&populate[]=meta,hero.image,featuredCard.cards,featuredCard.cards.image,sections,sections.logos.image,sections.cards,sections.cards.image,awards,footerLinks.links,socialMedia.logo,staticLinks,corpLogo,links.logo,links.childLinks.logo,brandLogo,copyrightText,awardShield,ogImage`;
+/* ---------------- Fallback Assets ---------------- */
+const FALLBACK_LOGOS = {
+  brandLogo: {
+    url: "https://alm-biz-assets-dev.almosafer.com/ds_logo_white_0c985a9ac2.svg",
+    alt: "Discover Saudi",
+  },
+  corpLogo: {
+    url: "https://alm-biz-assets-dev.almosafer.com/alm_corp_8d8bf6e1d1.svg",
+    alt: "Almosafer",
+  },
+  awards: [
+    {
+      url: "https://alm-biz-assets-dev.almosafer.com/WTA_DS_Generic_cb9aa1f316.svg",
+      alt: "Award",
+    },
+  ],
+  socialMedia: [
+    {
+      id: "instagram",
+      label: "Instagram",
+      url: "https://www.instagram.com/discoversaudi",
+      icon: "instagram",
+    },
+    {
+      id: "twitter",
+      label: "X",
+      url: "https://twitter.com/discoversaudi",
+      icon: "x",
+    },
+  ],
+};
 
+/* ---------------- Fetch ---------------- */
 async function fetchFooterData(locale) {
-  const url = ABOUT_US_URL.replace("{locale}", encodeURIComponent(locale || "en"));
-  const res = await fetch(url, { cache: "no-store" });
-  if (!res.ok) throw new Error(`Footer fetch failed: ${res.status}`);
-  const json = await res.json();
-  return json?.data?.attributes || {};
+  try {
+    const raw = await getDmcRaw(locale);
+    return raw?.data?.attributes || {};
+  } catch (error) {
+    console.error("Footer data fetch failed:", error);
+    return {};
+  }
 }
 
 function replaceYear(text) {
@@ -26,220 +61,290 @@ function replaceYear(text) {
   return String(text || "").replace(/\[year\]/gi, year);
 }
 
+/* ---------------- Link Helpers ---------------- */
 function pickLegalLinks(footerLinks) {
-  const links = Array.isArray(footerLinks?.links) ? footerLinks.links : [];
-  const terms =
-    links.find((l) => /terms/i.test(l?.label || "")) ||
-    links.find((l) => /use/i.test(l?.label || ""));
+  const links = Array.isArray(footerLinks?.links)
+    ? footerLinks.links
+    : [];
+
+  const terms = links.find((l) => /terms|use/i.test(l?.label || ""));
   const privacy = links.find((l) => /privacy/i.test(l?.label || ""));
 
   const out = [];
-  if (terms?.url) out.push({ label: terms.label || "Terms of Use", url: terms.url });
-  if (privacy?.url)
-    out.push({ label: privacy.label || "Privacy Policy", url: privacy.url });
+  if (terms?.url) out.push({ label: terms.label, url: terms.url });
+  if (privacy?.url) out.push({ label: privacy.label, url: privacy.url });
 
-  if (out.length) return out;
-
-  // Fallback (design-required)
-  return [
-    { label: "Terms of Use", url: "/terms" },
-    { label: "Privacy Policy", url: "/privacy" },
-  ];
+  return out.length
+    ? out
+    : [
+        { label: "Terms of Use", url: "/terms" },
+        { label: "Privacy Policy", url: "/privacy" },
+      ];
 }
 
 function pickStaticLinks(staticLinks) {
   const links = Array.isArray(staticLinks) ? staticLinks : [];
 
-  const subscribe =
-    links.find((l) => /subscribe/i.test(l?.label || "")) ||
-    links.find((l) => /newsletter/i.test(l?.label || ""));
+  const subscribe = links.find((l) =>
+    /subscribe|newsletter/i.test(l?.label || "")
+  );
   const contact = links.find((l) => /contact/i.test(l?.label || ""));
 
   const out = [];
-  if (subscribe?.url)
-    out.push({ label: subscribe.label || "Subscribe to newsletter", url: subscribe.url });
-  if (contact?.url) out.push({ label: contact.label || "Contact Us", url: contact.url });
+  if (subscribe?.url) out.push(subscribe);
+  if (contact?.url) out.push(contact);
 
-  if (out.length) return out;
-
-  // Fallback (design-required)
-  return [
-    { label: "Subscribe to newsletter", url: "/subscribe" },
-    { label: "Contact Us", url: "/contact" },
-  ];
+  return out.length
+    ? out
+    : [
+        { label: "Subscribe to our newsletter", url: "/subscribe" },
+        { label: "Contact Us", url: "/contact" },
+      ];
 }
+
+/* ===================================================== */
 
 export default async function Footer({ locale = "en" }) {
   const attrs = await fetchFooterData(locale);
 
-  const brandLogo = getStrapiImage(attrs?.brandLogo);
-  console.log("Footer data:", { attrs, brandLogo });
-  const awardShield = getStrapiImage(attrs?.awardShield);
-  const corpLogo = getStrapiImage(attrs?.corpLogo);
+  const brandLogo =
+    getStrapiImage(attrs?.brandLogo) || FALLBACK_LOGOS.brandLogo;
+  const corpLogo =
+    getStrapiImage(attrs?.corpLogo) || FALLBACK_LOGOS.corpLogo;
 
-  const social = Array.isArray(attrs?.socialMedia) ? attrs.socialMedia : [];
+  let awards = Array.isArray(attrs?.awards)
+    ? attrs.awards
+        .map((a) => getStrapiImage(a?.image))
+        .filter((a) => a?.url)
+    : [];
+
+  if (!awards.length) awards = FALLBACK_LOGOS.awards;
+
+  let social =
+    Array.isArray(attrs?.socialMedia) && attrs.socialMedia.length
+      ? attrs.socialMedia
+      : FALLBACK_LOGOS.socialMedia;
+
   const legalLinks = pickLegalLinks(attrs?.footerLinks);
   const staticLinks = pickStaticLinks(attrs?.staticLinks);
-  const copyrightText = replaceYear(attrs?.copyrightText || "© [year]");
+
+  const copyrightText = replaceYear(
+    attrs?.copyrightText ||
+      "Copyright Discover Saudi © [year] All rights reserved"
+  );
 
   return (
-    <Box component="footer" sx={{ bgcolor: "#2E1A47", color: "common.white"}}>
-      <Container maxWidth="lg" sx={{ py: { xs: 4, md: 6 } }}>
-        <Grid container spacing={{ xs: 3, md: 4 }} alignItems="flex-start">
-          {/* Left */}
+    <Box
+      component="footer"
+      sx={{ bgcolor: "#2E1A47", color: "white", py: { xs: 4, md: 5 } }}
+    >
+      <Container maxWidth="lg">
+        {/* ---------- TOP SECTION ---------- */}
+        <Grid
+          container
+          spacing={{ xs: 3, md: 6 }}
+          alignItems="flex-start"
+          justifyContent="space-between"
+        >
+          {/* LEFT */}
           <Grid item xs={12} md={4}>
-            <Stack direction="row" spacing={2} alignItems="center" flexWrap="wrap">
-              {brandLogo?.url ? (
-                <Box sx={{ position: "relative", width: 170, height: 40 }}>
-                  <Image
-                    src={brandLogo.url}
-                    alt={brandLogo.alt || "Brand logo"}
-                    fill
-                    sizes="170px"
-                    style={{ objectFit: "contain" }}
-                  />
-                </Box>
-              ) : (
-                <Typography sx={{ fontWeight: 700, letterSpacing: 0.2 }}>
-                  Brand
-                </Typography>
-              )}
+            <Stack spacing={2}>
+              <Box sx={{ position: "relative", width: 180, height: 45 }}>
+                <Image
+                  src={brandLogo.url}
+                  alt="Brand"
+                  fill
+                  sizes="180px"
+                  style={{ objectFit: "contain", objectPosition: "left" }}
+                />
+              </Box>
 
-              {awardShield?.url ? (
-                <Box sx={{ position: "relative", width: 44, height: 44 }}>
-                  <Image
-                    src={awardShield.url}
-                    alt={awardShield.alt || "Award shield"}
-                    fill
-                    sizes="44px"
-                    style={{ objectFit: "contain" }}
-                  />
-                </Box>
-              ) : null}
+              <Stack
+                direction="row"
+                spacing={2}
+                justifyContent="flex-start"
+              >
+                {awards.slice(0, 2).map((award, idx) => (
+                  <Box
+                    key={idx}
+                    sx={{ position: "relative", width: 240, height: 42 }}
+                  >
+                    <Image
+                      src={award.url}
+                      alt="Award"
+                      fill
+                      sizes="240px"
+                      style={{
+                        objectFit: "contain",
+                        objectPosition: "left",
+                      }}
+                    />
+                  </Box>
+                ))}
+              </Stack>
             </Stack>
           </Grid>
 
-          {/* Middle */}
+          {/* MIDDLE */}
           <Grid item xs={12} md={4}>
-            <Stack spacing={1.25} sx={{ textAlign: "start" }}>
-              <Typography variant="subtitle1" sx={{ fontWeight: 700 }}>
+            <Stack spacing={1.5}>
+              <Typography sx={{ fontWeight: 600, fontSize: 16 }}>
                 Legal
               </Typography>
-              <Stack spacing={0.75}>
-                {legalLinks.map((l) => (
-                  <Link
-                    key={l.label}
-                    href={l.url}
-                    style={{ color: "inherit", textDecoration: "none" }}
+
+              {legalLinks.map((l) => (
+                <Link
+                  key={l.label}
+                  href={l.url}
+                  style={{ color: "inherit", textDecoration: "none" }}
+                >
+                  <Typography
+                    variant="body2"
+                    sx={{
+                      fontSize: 14,
+                      opacity: 0.85,
+                      "&:hover": { textDecoration: "underline" },
+                    }}
                   >
-                    <Typography
-                      variant="body2"
-                      sx={{
-                        opacity: 0.9,
-                        "&:hover": { opacity: 1, textDecoration: "underline" },
-                      }}
-                    >
-                      {l.label}
-                    </Typography>
-                  </Link>
-                ))}
-              </Stack>
+                    {l.label}
+                  </Typography>
+                </Link>
+              ))}
             </Stack>
           </Grid>
 
-          {/* Right */}
+          {/* RIGHT */}
           <Grid item xs={12} md={4}>
-            <Stack spacing={1.25} sx={{ textAlign: "start" }}>
-              <Stack spacing={0.75}>
-                {staticLinks.map((l) => (
-                  <Link
-                    key={l.label}
-                    href={l.url}
-                    style={{ color: "inherit", textDecoration: "none" }}
+            <Stack
+              spacing={1.5}
+              alignItems={{ xs: "flex-start", md: "flex-end" }}
+              textAlign={{ xs: "left", md: "right" }}
+            >
+              {staticLinks.map((l) => (
+                <Link
+                  key={l.label}
+                  href={l.url}
+                  style={{ color: "inherit", textDecoration: "none" }}
+                >
+                  <Typography
+                    sx={{
+                      fontSize: 16,
+                      fontWeight: 600,
+                      "&:hover": { textDecoration: "underline" },
+                    }}
                   >
-                    <Typography
-                      variant="body2"
-                      sx={{
-                        opacity: 0.9,
-                        "&:hover": { opacity: 1, textDecoration: "underline" },
-                      }}
+                    {l.label}
+                  </Typography>
+                </Link>
+              ))}
+
+              <Stack direction="row" spacing={1.5}>
+                {social.slice(0, 2).map((s, idx) => {
+                  const label = s.label || "Social";
+                  const href = s.url;
+                  const isInstagram = /instagram/i.test(label);
+                  const isTwitter = /twitter|x/i.test(label);
+
+                  return (
+                    <Link
+                      key={idx}
+                      href={href}
+                      target="_blank"
+                      style={{ textDecoration: "none" }}
                     >
-                      {l.label}
-                    </Typography>
-                  </Link>
-                ))}
-              </Stack>
-
-              {social.length ? (
-                <Stack direction="row" spacing={1} sx={{ pt: 0.5 }}>
-                  {social.map((s, idx) => {
-                    const href = s?.url || s?.link || "#";
-                    const img = getStrapiImage(s?.logo);
-                    const label = s?.label || s?.title || "Social";
-
-                    return (
                       <IconButton
-                        key={s?.id || idx}
-                        component={Link}
-                        href={href}
-                        target={href.startsWith("http") ? "_blank" : undefined}
-                        rel={href.startsWith("http") ? "noopener noreferrer" : undefined}
-                        aria-label={label}
                         sx={{
-                          border: "1px solid rgba(255,255,255,0.18)",
-                          color: "common.white",
+                          color: "white",
+                          bgcolor: "rgba(255,255,255,0.1)",
+                          width: 36,
+                          height: 36,
+                          "&:hover": { bgcolor: "rgba(255,255,255,0.2)" },
                         }}
                       >
-                        {img?.url ? (
-                          <Box sx={{ position: "relative", width: 18, height: 18 }}>
-                            <Image
-                              src={img.url}
-                              alt={img.alt || label}
-                              fill
-                              sizes="18px"
-                              style={{ objectFit: "contain" }}
-                            />
-                          </Box>
+                        {isInstagram ? (
+                          <InstagramIcon sx={{ fontSize: 20 }} />
+                        ) : isTwitter ? (
+                          <XIcon sx={{ fontSize: 18 }} />
                         ) : (
-                          <span style={{ fontSize: 12 }}>{label.slice(0, 1)}</span>
+                          label[0]
                         )}
                       </IconButton>
-                    );
-                  })}
-                </Stack>
-              ) : null}
+                    </Link>
+                  );
+                })}
+              </Stack>
             </Stack>
           </Grid>
         </Grid>
 
-        <Divider sx={{ my: { xs: 3, md: 4 }, borderColor: "rgba(255,255,255,0.15)" }} />
+        <Divider
+          sx={{ my: 4, borderColor: "rgba(255,255,255,0.15)" }}
+        />
 
-        {/* Bottom row */}
-        <Stack
-          direction={{ xs: "column", sm: "row" }}
-          spacing={2}
+        {/* ---------- BOTTOM SECTION ---------- */}
+        <Grid
+          container
+          spacing={{ xs: 2, md: 3 }}
+          alignItems="center"
           justifyContent="space-between"
-          alignItems={{ xs: "flex-start", sm: "center" }}
-          sx={{ textAlign: "start" }}
         >
-          <Typography variant="body2" sx={{ opacity: 0.9 }}>
-            {copyrightText}
-          </Typography>
+          {/* LEFT */}
+          <Grid item xs={12} md={4}>
+            <Typography variant="caption" sx={{ fontWeight: 600 }}>
+              Travel and Tourism Services License Permit Number: 12302979
+            </Typography>
+          </Grid>
 
-          {corpLogo?.url ? (
-            <Box sx={{ position: "relative", width: 150, height: 28 }}>
-              <Image
-                src={corpLogo.url}
-                alt={corpLogo.alt || "Corporate logo"}
-                fill
-                sizes="150px"
-                style={{ objectFit: "contain" }}
-              />
-            </Box>
-          ) : null}
-        </Stack>
+          {/* CENTER */}
+          <Grid item xs={12} md={4}>
+            <Stack
+              spacing={1}
+              alignItems={{ xs: "flex-start", md: "center" }}
+              textAlign="center"
+            >
+              <Typography variant="body2" sx={{ fontWeight: 600 }}>
+                {copyrightText}
+              </Typography>
+
+              <Typography variant="caption" sx={{ fontWeight: 600 }}>
+                Commercial Registration Number: 1010584439
+              </Typography>
+            </Stack>
+          </Grid>
+
+          {/* RIGHT */}
+          <Grid item xs={12} md={4}>
+            <Stack
+              spacing={1}
+              alignItems={{ xs: "flex-start", md: "flex-end" }}
+            >
+              <Box sx={{ position: "relative", width: 130, height: 60 }}>
+                <Image
+                  src={corpLogo.url}
+                  alt="Corporate"
+                  fill
+                  sizes="130px"
+                  style={{
+                    objectFit: "contain",
+                    objectPosition: "right",
+                  }}
+                />
+              </Box>
+
+              <Typography
+                variant="caption"
+                sx={{
+                  fontWeight: 600,
+                  textAlign: { xs: "left", md: "right" },
+                }}
+              >
+                Category: Tour Operator, Travel & Tourism Agent, Hospitality
+                Reservation Services
+              </Typography>
+            </Stack>
+          </Grid>
+        </Grid>
       </Container>
     </Box>
   );
 }
-
