@@ -7,7 +7,6 @@ import Grid from "@mui/material/Grid";
 import Paper from "@mui/material/Paper";
 import Typography from "@mui/material/Typography";
 import Button from "@mui/material/Button";
-
 import { headingStyle } from "../styles/typography";
 import MarkdownText from "@/components/about-us/MarkdownText";
 import { imageHoverZoom } from "../styles/imageStyles";
@@ -52,7 +51,7 @@ export default function CardGrid({ section, locale }) {
       )}
 
       {/* GRID LAYOUT */}
-      <Grid container spacing={3}>
+      <Grid container spacing={3} alignItems="flex-start">
         {cards
           .filter((c) => c?.enabled !== false)
           .map((card, idx) => {
@@ -65,9 +64,9 @@ export default function CardGrid({ section, locale }) {
                   sx={{
                     overflow: "hidden",
                     borderRadius: { xs: 3, md: 2 },
-                    height: "100%",
                     display: "flex",
                     flexDirection: "column",
+                    alignSelf: "flex-start",
                   }}
                 >
                   {/* IMAGE */}
@@ -101,7 +100,6 @@ export default function CardGrid({ section, locale }) {
                       p: { xs: 3, md: 3 },
                       display: "flex",
                       flexDirection: "column",
-                      flex: 1,
                       textAlign: "center",
                     }}
                   >

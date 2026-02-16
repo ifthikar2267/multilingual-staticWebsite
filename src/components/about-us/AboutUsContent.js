@@ -2,7 +2,6 @@ import Alert from "@mui/material/Alert";
 import Box from "@mui/material/Box";
 import Stack from "@mui/material/Stack";
 import Container from "@mui/material/Container";
-
 import FeaturedCards from "@/components/about-us/FeaturedCards";
 import HeroSection from "@/components/about-us/HeroSection";
 import SectionRenderer from "@/components/about-us/SectionRenderer";

@@ -6,7 +6,6 @@ import Alert from "@mui/material/Alert";
 import Box from "@mui/material/Box";
 import Container from "@mui/material/Container";
 import Stack from "@mui/material/Stack";
-
 import { useAboutUsStore } from "@/stores/AboutUsStoreProvider";
 import HeroSection from "@/components/about-us/HeroSection";
 import FeaturedCards from "@/components/about-us/FeaturedCards";

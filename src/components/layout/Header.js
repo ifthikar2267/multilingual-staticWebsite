@@ -1,16 +1,25 @@
+"use client";
+
 import AppBar from "@mui/material/AppBar";
 import Box from "@mui/material/Box";
 import Toolbar from "@mui/material/Toolbar";
-import ReactCountryFlag from "react-country-flag";
 import Button from "@mui/material/Button";
 import Image from "next/image";
+import ReactCountryFlag from "react-country-flag";
+import { usePathname } from "next/navigation";
 import ServerLinkButton from "@/components/navigation/ServerLinkButton";
 import { HEADER_LOGO_URL } from "../constants/logos";
 
-
 export default function Header({ locale }) {
+  const pathname = usePathname();
+
   const otherLocale = locale === "ar" ? "en" : "ar";
-  const switchHref = `/${otherLocale}/about-us`;
+
+  // replace current locale with other locale
+  const switchHref = pathname.replace(
+    `/${locale}`,
+    `/${otherLocale}`
+  );
 
   return (
     <AppBar position="sticky" elevation={0} color="transparent">
@@ -43,12 +52,6 @@ export default function Header({ locale }) {
           <ServerLinkButton
             href={`/${locale}/about-us`}
             color="inherit"
-            sx={{
-              "&:hover": {
-                backgroundColor: "transparent",
-                color: "#E04E39",
-              },
-            }}
           >
             About Us
           </ServerLinkButton>
@@ -56,17 +59,16 @@ export default function Header({ locale }) {
           <ServerLinkButton
             href={`/${locale}/destination-management`}
             color="inherit"
-            sx={{
-              "&:hover": {
-                backgroundColor: "transparent",
-                color: "#E04E39",
-              },
-            }}
           >
             DMC
           </ServerLinkButton>
 
-          <Button component="a" href={switchHref} variant="outlined" sx={{ display: "flex", gap: 1 }}>
+          <Button
+            component="a"
+            href={switchHref}
+            variant="outlined"
+            sx={{ display: "flex", gap: 1 }}
+          >
             <ReactCountryFlag
               svg
               countryCode={otherLocale === "ar" ? "SA" : "US"}

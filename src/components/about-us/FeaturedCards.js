@@ -59,7 +59,6 @@ export default function FeaturedCards({ cards }) {
                     p: { xs: 2, md: 3 },
                     position: "relative",
                     overflow: "hidden",
-                 
                   }}
                 >
                   <Grid container spacing={4} alignItems="stretch">
@@ -97,7 +96,7 @@ export default function FeaturedCards({ cards }) {
                               <Typography
                                 sx={{
                                   fontFamily: "Gilroy-Semibold",
-                                  fontSize: 17,
+                                  fontSize: 16,
                                   lineHeight: "24px",
                                   fontWeight: 600,
                                   color: "#333",
