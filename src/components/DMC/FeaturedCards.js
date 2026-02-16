@@ -1,7 +1,8 @@
 import Image from "next/image";
 import Box from "@mui/material/Box";
 import Grid from "@mui/material/Grid";
-import Paper from "@mui/material/Paper";
+import { imageHoverZoom } from "../styles/imageStyles";
+import { headingStyle } from "../styles/typography";
 import Typography from "@mui/material/Typography";
 
 /* ---------- Paragraph Parser ---------- */
@@ -68,14 +69,7 @@ export default function FeaturedCards({ cards }) {
                           borderRadius: "12px",
                           aspectRatio: "4 / 3",
                           overflow: "hidden",
-
-                          "& img": {
-                            transition: "transform 0.5s ease",
-                          },
-
-                          "&:hover img": {
-                            transform: "scale(1.06)",
-                          },
+                          ...imageHoverZoom,
                         }}
                       >
                         {card?.image?.url && (
@@ -112,14 +106,7 @@ export default function FeaturedCards({ cards }) {
                         {card?.title && (
                           <Typography
                             variant="h4"
-                            sx={{
-                              fontFamily: "Gilroy-Bold",
-                              fontSize: "34px",
-                              fontWeight: 700,
-                              lineHeight: "52px",
-                              margin: "0 0 10px",
-                              color: "#E04E39",
-                            }}
+                            sx={ headingStyle }
                           >
                             {card.title}
                           </Typography>
@@ -130,7 +117,7 @@ export default function FeaturedCards({ cards }) {
                             <Typography
                               key={i}
                               sx={{
-                                fontFamily: "Gilroy-Regular",
+                                fontFamily: "Gilroy",
                                 fontSize: "17px",
                                 lineHeight: "24px",
                                 color: "#333",

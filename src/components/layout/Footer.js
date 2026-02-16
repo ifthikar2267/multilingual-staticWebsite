@@ -9,43 +9,11 @@ import Stack from "@mui/material/Stack";
 import Typography from "@mui/material/Typography";
 import InstagramIcon from "@mui/icons-material/Instagram";
 import XIcon from "@mui/icons-material/X";
-
+import { FALLBACK_LOGOS } from "../constants/logos";
 import { getStrapiImage } from "@/utils/strapi";
 import { getDmcRaw } from "@/services/dmcService";
 
-/* ---------------- Fallback Assets ---------------- */
-const FALLBACK_LOGOS = {
-  brandLogo: {
-    url: "https://alm-biz-assets-dev.almosafer.com/ds_logo_white_0c985a9ac2.svg",
-    alt: "Discover Saudi",
-  },
-  corpLogo: {
-    url: "https://alm-biz-assets-dev.almosafer.com/alm_corp_8d8bf6e1d1.svg",
-    alt: "Almosafer",
-  },
-  awards: [
-    {
-      url: "https://alm-biz-assets-dev.almosafer.com/WTA_DS_Generic_cb9aa1f316.svg",
-      alt: "Award",
-    },
-  ],
-  socialMedia: [
-    {
-      id: "instagram",
-      label: "Instagram",
-      url: "https://www.instagram.com/discoversaudi",
-      icon: "instagram",
-    },
-    {
-      id: "twitter",
-      label: "X",
-      url: "https://twitter.com/discoversaudi",
-      icon: "x",
-    },
-  ],
-};
-
-/* ---------------- Fetch ---------------- */
+/* Fetch */
 async function fetchFooterData(locale) {
   try {
     const raw = await getDmcRaw(locale);
@@ -61,7 +29,7 @@ function replaceYear(text) {
   return String(text || "").replace(/\[year\]/gi, year);
 }
 
-/* ---------------- Link Helpers ---------------- */
+/* Link Helpers */
 function pickLegalLinks(footerLinks) {
   const links = Array.isArray(footerLinks?.links)
     ? footerLinks.links
@@ -102,7 +70,6 @@ function pickStaticLinks(staticLinks) {
       ];
 }
 
-/* ===================================================== */
 
 export default async function Footer({ locale = "en" }) {
   const attrs = await fetchFooterData(locale);
@@ -139,7 +106,7 @@ export default async function Footer({ locale = "en" }) {
       sx={{ bgcolor: "#2E1A47", color: "white", py: { xs: 4, md: 5 } }}
     >
       <Container maxWidth="lg">
-        {/* ---------- TOP SECTION ---------- */}
+        {/* TOP SECTION */}
         <Grid
           container
           spacing={{ xs: 3, md: 6 }}

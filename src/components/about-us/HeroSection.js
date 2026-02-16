@@ -51,6 +51,7 @@ export default function HeroSection({ hero, dir = "ltr" }) {
                 fontWeight: 250,
                 lineHeight: 9.5,
                 fontSize: { xs: 32, sm: 40, md: 52 },
+                px: { xs: 1, md: 4},
                 textAlign: "start",
               }}
             >

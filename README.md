@@ -30,8 +30,8 @@ A production-ready Next.js multilingual website featuring About Us and Destinati
    - Hero section with full-width image
    - Featured cards with alternating layouts
    - Dynamic section rendering
-   - Logo sections
    - Card grids
+   - Logo sections
 
 2. **Destination Management Company** (`/[locale]/destination-management`)
    - DMC-specific hero
@@ -348,6 +348,6 @@ Internal project - contact the development team for contribution guidelines.
 
 ---
 
-**Built with ❤️ for Discover Saudi**
+**Built with for Discover Saudi**
 
 For questions or support, contact the development team.

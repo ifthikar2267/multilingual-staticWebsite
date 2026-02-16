@@ -3,7 +3,8 @@ import Box from "@mui/material/Box";
 import Grid from "@mui/material/Grid";
 import Paper from "@mui/material/Paper";
 import Typography from "@mui/material/Typography";
-import MarkdownText from "@/components/about-us/MarkdownText";
+import { imageHoverZoom } from "../styles/imageStyles";
+import { headingStyle } from "../styles/typography";
 
 export default function SectionsRenderer({ sections }) {
   if (!Array.isArray(sections) || sections.length === 0) return null;
@@ -23,14 +24,7 @@ export default function SectionsRenderer({ sections }) {
           {section?.title ? (
             <Typography
               variant="h4"
-              sx={{
-                fontWeight: 700,
-                fontSize: { xs: 24, md: 34 },
-                pt: 4,
-                pb: 4,
-                textAlign: "start",
-                color: "#ca4608",
-              }}
+              sx={ headingStyle }
             >
               {section.title}
             </Typography>
@@ -38,12 +32,18 @@ export default function SectionsRenderer({ sections }) {
 
           {section?.description ? (
             <Box sx={{ mb: 3 }}>
-              <MarkdownText
-                text={section.description}
-                align="start"
-                headingWeight={600}
-                bodyWeight={400}
-              />
+              <Typography
+                sx={{
+                  width: "100%",
+                  mb: "8px",
+                  fontSize: "16px",
+                  fontWeight: 400,
+                  lineHeight: "24px",
+                  color: "#2E1A47",
+                }}
+              >
+                {section.description}
+              </Typography>
             </Box>
           ) : null}
 
@@ -61,10 +61,7 @@ export default function SectionsRenderer({ sections }) {
                 sx={{
                   position: "absolute",
                   inset: 0,
-                  transition: "transform 0.5s ease",
-                  "&:hover": {
-                    transform: "scale(1.06)",
-                  },
+                  ...imageHoverZoom,
                 }}
               >
                 <Image
@@ -110,10 +107,7 @@ export default function SectionsRenderer({ sections }) {
                               sx={{
                                 position: "absolute",
                                 inset: 0,
-                                transition: "transform 0.5s ease",
-                                "&:hover": {
-                                  transform: "scale(1.06)",
-                                },
+                                ...imageHoverZoom,
                               }}
                             >
                               <Image
@@ -143,7 +137,6 @@ export default function SectionsRenderer({ sections }) {
                                 mb: 1.5,
                                 textAlign: "start",
                                 fontSize: { xs: "1.1rem", md: "18px" },
-                                
                               }}
                             >
                               {card.title}
@@ -151,11 +144,12 @@ export default function SectionsRenderer({ sections }) {
                           ) : null}
 
                           {card?.description ? (
-                            <Typography                    
+                            <Typography
                               sx={{
                                 textAlign: "start",
                                 lineHeight: 1.6,
-                                fontSize: { xs: "14px", md: "16px" },
+                                fontSize: { xs: "14px", md: "17px" },
+                                fontFamily: "gilroy",
                                 fontWeight: 400,
                                 color: "#2E1A47",
                               }}

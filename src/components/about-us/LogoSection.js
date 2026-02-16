@@ -3,6 +3,7 @@ import Box from "@mui/material/Box";
 import Grid from "@mui/material/Grid";
 import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
+import { headingStyle } from "../styles/typography";
 
 export default function LogoSection({ section }) {
   const logos = Array.isArray(section?.logos) ? section.logos : [];
@@ -22,17 +23,10 @@ export default function LogoSection({ section }) {
         <Grid container spacing={6} alignItems="center">
           
           {/* ---------- Left Content ---------- */}
-          <Grid item xs={12} md={5}>
+          <Grid item xs={12} md={6}>
             {section?.title && (
               <Typography
-                sx={{
-                  fontFamily: "Gilroy-Bold",
-                  fontSize: "30px",
-                  fontWeight: 700,
-                  lineHeight: "52px",
-                  margin  : "0 0 8px",
-                  color: "#E04E39",
-                }}
+                sx={ headingStyle }
               >
                 {section.title}
               </Typography>
@@ -53,7 +47,7 @@ export default function LogoSection({ section }) {
           </Grid>
 
           {/* ---------- Logos ---------- */}
-          <Grid item xs={12} md={7}>
+          <Grid item xs={12} md={6}>
             <Grid container spacing={4} alignItems="center">
               {logos.map((logo, idx) => {
                 const img = logo?.image;

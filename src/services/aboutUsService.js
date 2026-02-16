@@ -1,7 +1,7 @@
 import { cache } from "react";
 
 const ABOUT_US_URL =
-  `${process.env.ABOUT_US_URL}/api/about-us?locale={locale}&populate[]=
+  `${process.env.BASE_URL}/api${process.env.ABOUT_US_URL}?locale={locale}&populate[]=
   localizations,meta,hero.image,featuredCard.cards,featuredCard.cards.image,sections,sections.logos.image,sections.cards,sections.cards.image,awards,footerLinks.links,socialMedia.logo,staticLinks,corpLogo,links.logo,links.childLinks.logo,brandLogo,copyrightText,awardShield,ogImage`;
 
 export const getAboutUsRaw = cache(async function getAboutUsRaw(locale) {
